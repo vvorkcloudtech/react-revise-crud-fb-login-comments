@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import PropTypes from "prop-types";
 export default class Comments extends Component {
   state = {
     comment: [
@@ -118,3 +118,16 @@ export default class Comments extends Component {
     );
   }
 }
+
+Comments.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  name: PropTypes.string,
+  img: PropTypes.string,
+  array: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      age: PropTypes.number
+    })
+  )
+};

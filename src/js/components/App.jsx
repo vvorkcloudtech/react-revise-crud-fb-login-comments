@@ -92,7 +92,7 @@ class App extends React.Component {
     });
 
     return (
-      <div style={{ marginLeft: "200px" }}>
+      <div style={{ marginLeft: "100px" }}>
         {!this.state.username ? (
           <FacebookLogin
             appId="1770338773262262"
@@ -125,9 +125,15 @@ class App extends React.Component {
         <div>
           <Comments
             handleChange={this.handleChange}
-            value={this.state.value}
+            value={2}
             name={this.state.username}
             img={this.state.img}
+            array={[
+              {
+                name: "",
+                age: 20
+              }
+            ]}
           />
         </div>
       </div>
