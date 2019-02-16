@@ -1,70 +1,14 @@
 import React from "react";
 import Comments from "./Comments";
 import FacebookLogin from "react-facebook-login";
+import Home from "./Home";
+import Search from "./Search";
+import Modal from "react-responsive-modal";
 
 class App extends React.Component {
-  state = {
-    value: "",
-    listItems: [],
-    username: "",
-    img: ""
-  };
-  handleChange = e => {
-    this.setState({
-      value: e.target.value
-    });
-  };
-  handleSubmit = e => {
-    e.preventDefault();
-    this.setState({
-      listItems: [...this.state.listItems, this.state.value],
-      value: ""
-    });
-  };
-  handleClick = index => {
-    let items = this.state.listItems;
-    items.splice(index, 1);
-    this.setState({
-      listItems: items
-    });
-  };
-  moveUP = index => {
-    if (!index == 0) {
-      let items = this.state.listItems;
-      let temp = items[index];
-      items[index] = items[index - 1];
-      items[index - 1] = temp;
-      this.setState({
-        listItems: items
-      });
-    } else {
-      alert("sorry");
-    }
-  };
-  moveDown = index => {
-    let items = this.state.listItems;
-
-    if (index !== items.length - 1) {
-      let temp = items[index];
-      items[index] = items[index + 1];
-      items[index + 1] = temp;
-      this.setState({
-        listItems: items
-      });
-    } else {
-      alert("sorry");
-    }
-  };
-  responseFacebook = res => {
-    this.setState({
-      username: res.name,
-      img: res.picture.data.url
-    });
-  };
-
   render() {
-    console.log(this.state);
-    let response = this.state.listItems.map((item, index) => {
+    console.log("props from provider wraper", this.props);
+    let response = this.props.listItems.map((item, index) => {
       return (
         <tr key={index}>
           <td>{item}</td>
@@ -72,17 +16,25 @@ class App extends React.Component {
             {" "}
             <button
               className="btn btn-danger"
-              onClick={() => this.handleClick(index)}
+              onClick={() => this.props.handleClick(index)}
             >
               DELETE
             </button>
-            <button className="btn btn-success">UPDATE</button>
-            <button className="btn btn-info" onClick={() => this.moveUP(index)}>
+            <button
+              className="btn btn-success"
+              onClick={() => this.props.handleEdit(index)}
+            >
+              EDIT
+            </button>
+            <button
+              className="btn btn-info"
+              onClick={() => this.props.moveUP(index)}
+            >
               MOVE-UP
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => this.moveDown(index)}
+              onClick={() => this.props.moveDown(index)}
             >
               MOVE-DOWN
             </button>
@@ -93,22 +45,22 @@ class App extends React.Component {
 
     return (
       <div style={{ marginLeft: "200px" }}>
-        {!this.state.username ? (
+        {!this.props.username ? (
           <FacebookLogin
             appId="1770338773262262"
             autoLoad={true}
             fields="name,email,picture"
-            callback={this.responseFacebook}
+            callback={this.props.responseFacebook}
           />
         ) : (
-          <h1>Welcome {this.state.username}</h1>
+          <h1>Welcome {this.props.username}</h1>
         )}
         <div>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.props.handleSubmit}>
             <input
               type="text"
-              value={this.state.value}
-              onChange={this.handleChange}
+              value={this.props.value}
+              onChange={this.props.handleChange}
             />
             <button>ADD</button>
           </form>
@@ -124,12 +76,29 @@ class App extends React.Component {
         </table>
         <div>
           <Comments
-            handleChange={this.handleChange}
-            value={this.state.value}
-            name={this.state.username}
-            img={this.state.img}
+            handleChange={this.props.handleChange}
+            value={this.props.value}
+            name={this.props.username}
+            img={this.props.img}
           />
         </div>
+        <Modal open={this.props.open} onClose={this.props.handleClose}>
+          <div>
+            <h1>You can update the value HERE!</h1>
+            <form onSubmit={this.props.handleUpdate}>
+              <input
+                type="text"
+                value={this.props.value}
+                onChange={this.props.handleChange}
+              />
+              <br />
+              <button>UPDATE</button>
+            </form>
+          </div>
+        </Modal>
+        <Home>
+          <Search />
+        </Home>
       </div>
     );
   }
